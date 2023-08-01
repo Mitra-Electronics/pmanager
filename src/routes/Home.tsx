@@ -2,15 +2,6 @@ import '../App.css'
 import Navbar from '../components/Navbar'
 import useDocumentTitle from '../essentials/Title'
 
-interface PersonProps{
-  name: string,
-  country: string,
-  company: string,
-  role: string,
-  colour: string,
-  img: string
-}
-
 const Person = ({name, country, company, role, colour, img}:PersonProps) => {
   return (
     <tr>

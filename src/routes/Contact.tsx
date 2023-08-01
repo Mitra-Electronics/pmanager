@@ -1,64 +1,30 @@
 import Navbar from "../components/Navbar"
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query"
-
-interface Person {
-    first_name: string,
-    last_name: string,
-    email: string,
-    phone: string,
-    birthday: string,
-    label: string,
-    twitter: string,
-    instagram: string,
-    github: string
-}
-
-interface Result {
-    success: boolean,
-    result: Person
-}
-
-const getContact = async (id: number):Promise<Person|undefined> => {
-    try {
-        const response = await axios.get("http://127.0.0.1:8000/get/id",
-        {
-            params: {
-                id: id
-            }
-        });
-        console.log(response);
-        const data:Result =  response.data
-        return data.result
-    } catch (error) {
-        console.error(error);
-    }
-}
+import getContact from "../essentials/Requests"
 
 const Contact = () => {
     const { peopleId } = useParams()
 
     const { data, status } = useQuery({
-        //    ^? const data: number | undefined
         queryKey: ['test'],
         queryFn: () => getContact((peopleId as unknown as number)),
     })
 
-    if (status === "loading"){
-        return(
+    if (status === "loading") {
+        return (
             <>
-            <Navbar/>
-            <h1 className="text-xl text-white">Loading...</h1>
+                <Navbar />
+                <h1 className="text-xl text-white">Loading...</h1>
             </>
         )
     }
 
-    else if (status === "error" || data === undefined){
-        return(
+    else if (status === "error" || data === undefined) {
+        return (
             <>
-            <Navbar/>
-            <h1 className="text-xl text-white">Error</h1>
+                <Navbar />
+                <h1 className="text-xl text-white">Error</h1>
             </>
         )
     }
@@ -66,14 +32,21 @@ const Contact = () => {
     return (
         <>
             <Navbar />
-            <div className="flex items-center justify-center">
-                <div className="avatar">
-                    <div className="mask rounded-full w-45 h-45">
-                        <img src="https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo" alt="Avatar Tailwind CSS Component" />
+            <div className="card lg:card-side bg-base-100 shadow-xl mx-5 lg:mx-40 rounded-3xl">
+                <figure className="p-10">
+                    <img className="rounded-full" src="https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo" alt="Photo" />
+                </figure>
+                <div className="card-body">
+                    <div>
+                        <h2 className="card-title">{data.first_name} {data.last_name}</h2>
+                        <p>{data.email}</p>
+                        <p>{"https://github.com/" + data.github}</p>
                     </div>
-                    <h1 className="text-3xl text-white">{data.first_name} {data.last_name}</h1>
-                    <h1 className="text-xl">{data.email}</h1>
-                    <a href={"https://github.com/" + data.github}>hjk</a>
+                </div>
+                <div className="absolute bottom-0 right-0 p-6 max-md:hidden">
+                    <div className="card-actions justify-end">
+                        <button className="btn btn-primary">Edit</button>
+                    </div>
                 </div>
             </div>
         </>
