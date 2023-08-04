@@ -10,7 +10,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import EditContact from './routes/EditContact.tsx'
+import AddContact from './routes/AddContact.tsx'
 
 const router = createBrowserRouter([
   {
@@ -23,15 +23,15 @@ const router = createBrowserRouter([
     element: <Contact />,
   },
   {
-    path: "people/:peopleId/edit",
-    element: <EditContact/>,
+    path: "people/add",
+    element: <AddContact/>,
   },
 ]);
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true,
     },
   }
 },)

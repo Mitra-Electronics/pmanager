@@ -1,8 +1,13 @@
 import '../App.css'
 import Navbar from '../components/Navbar'
+import { PersonProps } from '../essentials/Types'
 import useDocumentTitle from '../essentials/Title'
+import { useQuery } from "@tanstack/react-query"
+import { getAllContacts } from '../essentials/Requests'
+import Unpopulated from '../essentials/Unpopulated'
+import { Link } from 'react-router-dom'
 
-const Person = ({name, country, company, role, colour, img}:PersonProps) => {
+const PersonComponent = ({ id, name, country, email, birthday, github, img }: PersonProps) => {
   return (
     <tr>
       <th>
@@ -24,13 +29,13 @@ const Person = ({name, country, company, role, colour, img}:PersonProps) => {
         </div>
       </td>
       <td className="max-sm:role">
-        {company}
+        {email}
         <br />
-        <span className="badge badge-ghost badge-sm max-md:role">{role}</span>
+        <span className="badge badge-ghost badge-sm max-md:role">{birthday}</span>
       </td>
-      <td className="max-sm:role">{colour}</td>
+      <td className="max-sm:role">{github}</td>
       <th className="max-sm:role">
-        <button className="btn btn-ghost btn-xs">details</button>
+        <button className="btn btn-ghost btn-xs"><Link to={'/people/'+id}>details</Link></button>
       </th>
     </tr>
   )
@@ -38,6 +43,19 @@ const Person = ({name, country, company, role, colour, img}:PersonProps) => {
 
 function App() {
   useDocumentTitle("Home")
+  const { data, status } = useQuery({
+    queryKey: ["all"],
+    queryFn: () => getAllContacts(),
+  })
+
+  if (status === "loading")
+    return <Unpopulated text="Loading" />
+
+  else if (status === "error" || data === undefined)
+    return <Unpopulated text="Error" />
+
+  else if (data === null)
+    return <Unpopulated text="404 Contact does not exist" />
   return (
     <>
       <Navbar />
@@ -52,20 +70,17 @@ function App() {
                 </label>
               </th>
               <th>Name</th>
-              <th className="max-sm:role">Job</th>
-              <th className="max-sm:role">Favorite Color</th>
+              <th className="max-sm:role">Email</th>
+              <th className="max-sm:role">Github</th>
               <th className="max-sm:role"></th>
             </tr>
           </thead>
           <tbody>
-            {/* row 1 */}
-            <Person name="Hart Hagerty" country="United States" company="Zemlak, Daniel and Leannon" role="Desktop Support Technician" colour="Purple" img="https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo"/>
-            {/* row 2 */}
-            <Person name="Brice Swyre" country="China" company="Carroll Group" role="Tax Accountant" colour="Red" img="https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo"/>
-            {/* row 3 */}
-            <Person name="Marjy Ferencz" country="Russia" company="Rowe-Schoen" role="Office Assistant I" colour="Crimson" img="https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo"/>
-            {/* row 4 */}
-            <Person name="Yancy Tear" country="Brazil" company="Wyman-Ledner" role="Community Outreach Specialist" colour="Indigo" img="https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo"/>
+            {/*<Person name="Hart Hagerty" country="United States" email="Zemlak, Daniel and Leannon" birthday="Desktop Support Technician" github="Purple" img="https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo"/>
+            <Person name="Brice Swyre" country="China" email="Carroll Group" birthday="Tax Accountant" github="Red" img="https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo"/>
+            <Person name="Marjy Ferencz" country="Russia" email="Rowe-Schoen" birthday="Office Assistant I" github="Crimson" img="https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo"/>
+  <Person name="Yancy Tear" country="Brazil" email="Wyman-Ledner" birthday="Community Outreach Specialist" github="Indigo" img="https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo"/>*/}
+            {data.map((e) => <PersonComponent name={e.first_name+" "+e.last_name} country={e.country} email={e.email} birthday={e.birthday} github={e.github} img='https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo' id={e.id}/>)}
           </tbody>
           {/* foot */}
           {/*<tfoot>

@@ -1,33 +1,25 @@
 import Navbar from "../components/Navbar"
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query"
-import getContact from "../essentials/Requests"
+import { getContact } from "../essentials/Requests";
+import Unpopulated from "../essentials/Unpopulated";
 
 const Contact = () => {
     const { peopleId } = useParams()
 
     const { data, status } = useQuery({
-        queryKey: ['test'],
+        queryKey: ["test"],
         queryFn: () => getContact((peopleId as unknown as number)),
     })
 
-    if (status === "loading") {
-        return (
-            <>
-                <Navbar />
-                <h1 className="text-xl text-white">Loading...</h1>
-            </>
-        )
-    }
+    if (status === "loading") 
+        return <Unpopulated text="Loading"/>
 
-    else if (status === "error" || data === undefined) {
-        return (
-            <>
-                <Navbar />
-                <h1 className="text-xl text-white">Error</h1>
-            </>
-        )
-    }
+    else if (status === "error" || data === undefined)
+        return <Unpopulated text="Error" />
+
+    else if (data === null) 
+        return <Unpopulated text="404 Contact does not exist"/>
 
     return (
         <>
