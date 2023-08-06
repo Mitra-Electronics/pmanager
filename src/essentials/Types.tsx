@@ -1,24 +1,24 @@
 export interface PersonProps{
     id: number, 
     name: string,
-    country: string,
-    email: string,
-    birthday: string,
-    github: string,
+    country: string| null,
+    email: string| null,
+    birthday: string| null,
+    github: string| null,
     img: string
 }
 
 export interface Person {
     first_name: string,
     last_name: string,
-    email: string,
-    phone: string,
-    country: string,
-    birthday: string,
-    label: string,
-    twitter: string,
-    instagram: string,
-    github: string
+    email: string|null,
+    phone: string|null,
+    country: string|null,
+    birthday: string|null,
+    label: string|null,
+    twitter: string|null,
+    instagram: string|null,
+    github: string|null
 }
 
 export interface PersonInDb extends Person{
@@ -27,7 +27,7 @@ export interface PersonInDb extends Person{
 
 export interface GetPersonResult {
     success: boolean,
-    result: Person
+    result: PersonInDb
 }
 
 export interface GetAllPeopleResult {

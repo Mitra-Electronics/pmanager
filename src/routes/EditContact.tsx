@@ -1,13 +1,22 @@
 import Navbar from "../components/Navbar"
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useRef } from "react"
 import { Person } from "../essentials/Types"
-import { addContact } from "../essentials/Requests"
+import { editContact, getContact } from "../essentials/Requests"
 import PeopleFormField from "../components/People/PeopleFormField";
 import PeopleForm from "../components/People/PeopleForm";
+import { useQuery } from "@tanstack/react-query";
+import Unpopulated from "../components/Unpopulated";
 
 
-const AddContact = () => {
+const EditContact = () => {
+    const { peopleId } = useParams()
+
+    const { data, status } = useQuery({
+        queryKey: ["test"],
+        queryFn: () => getContact((peopleId as unknown as number)),
+    })
+
     const firstName = useRef("") as unknown as React.MutableRefObject<HTMLInputElement>
     const lastName = useRef("") as unknown as React.MutableRefObject<HTMLInputElement>
     const email = useRef("") as unknown as React.MutableRefObject<HTMLInputElement>
@@ -42,7 +51,7 @@ const AddContact = () => {
             github: github.current.value != "" ? github.current.value : null
         }
         console.log(person)
-        addContact(person, () => (window as any).success_dialog.showModal())
+        editContact((peopleId as unknown as number), person, () => (window as any).success_dialog.showModal())
     }
 
     const modalHandler = (e: React.FormEvent) => {
@@ -50,25 +59,34 @@ const AddContact = () => {
         history('/')
     }
 
+    if (status === "loading")
+        return <Unpopulated text="Loading" />
+
+    else if (status === "error" || data === undefined)
+        return <Unpopulated text="Error" />
+
+    else if (data === null)
+        return <Unpopulated text="404 Contact does not exist" />
+
     return (
         <>
             <Navbar />
             <PeopleForm callback={(e) => submitForm(e)}>
-                <PeopleFormField label="First Name" type="text" placeholder="Enter first name" ref_form={firstName} />
-                <PeopleFormField label="Last Name" type="text" placeholder="Enter last name" ref_form={lastName} />
-                <PeopleFormField label="Email" type="email" placeholder="Enter email" ref_form={email} />
-                <PeopleFormField label="Phone" type="text" placeholder="Enter phone number" ref_form={phone} />
-                <PeopleFormField label="Country" type="text" placeholder="Enter country" ref_form={country} />
-                <PeopleFormField label="Birthday" type="date" placeholder="Enter birthday" ref_form={birthday} />
-                <PeopleFormField label="Label" type="text" placeholder="Enter label" ref_form={label} />
-                <PeopleFormField label="Twitter" type="text" placeholder="Enter twitter" ref_form={twitter} />
-                <PeopleFormField label="Instagram" type="text" placeholder="Enter instagram" ref_form={instagram} />
-                <PeopleFormField label="Github" type="text" placeholder="Enter github" ref_form={github} />
+                <PeopleFormField label="First Name" type="text" placeholder="Enter first name" ref_form={firstName} value={data.first_name} />
+                <PeopleFormField label="Last Name" type="text" placeholder="Enter last name" ref_form={lastName} value={data.last_name} />
+                <PeopleFormField label="Email" type="email" placeholder="Enter email" ref_form={email} value={data.email} />
+                <PeopleFormField label="Phone" type="text" placeholder="Enter phone number" ref_form={phone} value={data.phone} />
+                <PeopleFormField label="Country" type="text" placeholder="Enter country" ref_form={country} value={data.country} />
+                <PeopleFormField label="Birthday" type="date" placeholder="Enter birthday" ref_form={birthday} value={data.birthday} />
+                <PeopleFormField label="Label" type="text" placeholder="Enter label" ref_form={label} value={data.label} />
+                <PeopleFormField label="Twitter" type="text" placeholder="Enter twitter" ref_form={twitter} value={data.twitter} />
+                <PeopleFormField label="Instagram" type="text" placeholder="Enter instagram" ref_form={instagram} value={data.instagram} />
+                <PeopleFormField label="Github" type="text" placeholder="Enter github" ref_form={github} value={data.github} />
             </PeopleForm>
             <dialog id="success_dialog" className="modal">
                 <form method="dialog" className="modal-box" onSubmit={(e) => modalHandler(e)}>
                     <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-                    <h3 className="font-bold text-lg">Contact Created!</h3>
+                    <h3 className="font-bold text-lg">Contact Edited!</h3>
                     <p className="py-4">Click on ✕ button to continue</p>
                 </form>
             </dialog>
@@ -76,4 +94,4 @@ const AddContact = () => {
     )
 }
 
-export default AddContact
+export default EditContact

@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './routes/Home.tsx'
 import Contact from './routes/Contact.tsx'
-import ErrorPage from './essentials/Error.tsx'
+import ErrorPage from './components/Error.tsx'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import './index.css'
 import {
@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import AddContact from './routes/AddContact.tsx'
+import EditContact from './routes/EditContact.tsx'
 
 const router = createBrowserRouter([
   {
@@ -24,14 +25,18 @@ const router = createBrowserRouter([
   },
   {
     path: "people/add",
-    element: <AddContact/>,
+    element: <AddContact />,
+  },
+  {
+    path: "people/edit/:peopleId",
+    element: <EditContact />,
   },
 ]);
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: true,
+      refetchOnWindowFocus: false,
     },
   }
 },)

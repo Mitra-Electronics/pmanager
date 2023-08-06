@@ -6,4 +6,7 @@
     .role{
         @apply hidden
     }
+    .contact-socials{
+        @apply transition-all duration-100 ease-linear h-6 w-6 hover:h-7 hover:w-7
+    }
   }
