@@ -1,35 +1,11 @@
-import Navbar from "../components/Navbar"
+import Navbar from "../navigation/Navbar"
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query"
 import { getContact } from "../essentials/Requests";
 import Unpopulated from "../components/Unpopulated";
-import { ReactNode } from "react";
 import { Github, Twitter, Instagram } from "lucide-react";
-
-interface SocialCardsProps {
-    href: string,
-    dataTip: string,
-    children: ReactNode
-}
-
-const SocialCards = ({href, dataTip, children}:SocialCardsProps) => {
-    return (
-        <th className="pr-1.5 tooltip" data-tip={dataTip}>
-            <a href={href}>
-                {children}
-            </a>
-        </th>
-    )
-}
-
-const Conditional = (render: ReactNode, condition: boolean) => {
-    if (condition) {
-        return render
-    }
-    else {
-        return <></>
-    }
-}
+import SocialCards from "../components/SocialCards";
+import Conditional from "../components/Conditional";
 
 const Contact = () => {
     const { peopleId } = useParams()
@@ -54,73 +30,48 @@ const Contact = () => {
             <div className="card lg:card-side bg-base-100 shadow-xl mx-5 lg:mx-40 rounded-3xl">
                 <figure className="p-10">
                     <img
-                        className="rounded-full"
-                        src="https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo"
+                        className="rounded-full aspect-square w-72 h-72"
+                        src={data.img ? data.img : "https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo"}
                         alt="Photo"
                     />
                 </figure>
                 <div className="card-body">
                     <div>
                         <h2 className="card-title my-5">{data.first_name} {data.last_name}
-                            {
-                                Conditional(
-                                    <div className="badge badge-lg badge-primary">{data.label}</div>,
-                                    data.label != null
-                                )
-                            }
+                            <Conditional condition={data.label != null}>
+                                <div className="badge badge-lg badge-primary">{data.label}</div>
+                            </Conditional>
                         </h2>
-                        {
-                            Conditional(
-                                <p className="my-2">Email: {data.email}</p>,
-                                data.email != null
-                            )
-                        }
-                        {
-                            Conditional(
-                                <p className="my-2">Phone: {data.phone}</p>,
-                                data.phone != null
-                            )
-                        }
-                        {
-                            Conditional(
-                                <p className="my-2">Birthday: {data.birthday}</p>,
-                                data.birthday != null
-                            )
-                        }
-                        {
-                            Conditional(
-                                <p className="my-2">Country: {data.country}</p>,
-                                data.country != null
-                            )
-                        }
+                        <Conditional condition={data.email != null}>
+                            <p className="my-2">Email: {data.email}</p>
+                        </Conditional>
+                        <Conditional condition={data.phone != null}>
+                            <p className="my-2">Phone: {data.phone}</p>
+                        </Conditional>
+                        <Conditional condition={data.birthday != null}>
+                            <p className="my-2">Birthday: {data.birthday}</p>
+                        </Conditional>
+                        <Conditional condition={data.country != null}>
+                            <p className="my-2">Country: {data.country}</p>
+                        </Conditional>
                         <table className="table-auto">
                             <thead>
                                 <tr>
-                                    {
-                                        Conditional(
-                                            <SocialCards dataTip="Github" href={"https://github.com/"+data.github}>
-                                                <Github className="contact-socials" />
-                                            </SocialCards>
-                                                ,
-                                            data.github != null
-                                        )
-                                    }
-                                    {
-                                        Conditional(
-                                            <SocialCards dataTip="Twitter" href={"https://twitter.com/"+data.twitter}>
-                                                <Twitter className="contact-socials" />
-                                            </SocialCards>,
-                                            data.twitter != null
-                                        )
-                                    }
-                                    {
-                                        Conditional(
-                                            <SocialCards dataTip="Instagram" href={"https://instagram.com/"+data.instagram}>
-                                                <Instagram className="contact-socials" />
-                                            </SocialCards>,
-                                            data.instagram != null
-                                        )
-                                    }
+                                    <Conditional condition={data.github != null}>
+                                        <SocialCards dataTip="Github" href={"https://github.com/" + data.github}>
+                                            <Github className="contact-socials" />
+                                        </SocialCards>
+                                    </Conditional>
+                                    <Conditional condition={data.twitter != null}>
+                                        <SocialCards dataTip="Twitter" href={"https://twitter.com/" + data.twitter}>
+                                            <Twitter className="contact-socials" />
+                                        </SocialCards>
+                                    </Conditional>
+                                    <Conditional condition={data.instagram != null}>
+                                        <SocialCards dataTip="Instagram" href={"https://instagram.com/" + data.instagram}>
+                                            <Instagram className="contact-socials" />
+                                        </SocialCards>
+                                    </Conditional>
                                 </tr>
                             </thead>
                         </table>
@@ -129,7 +80,7 @@ const Contact = () => {
                 </div>
                 <div className="absolute bottom-0 right-0 p-6 max-md:hidden">
                     <div className="card-actions justify-end">
-                        <Link to={'/people/edit/'+data.id}><button className="btn btn-primary">Edit</button></Link>
+                        <Link to={'/people/edit/' + data.id}><button className="btn btn-primary">Edit</button></Link>
                     </div>
                 </div>
             </div>

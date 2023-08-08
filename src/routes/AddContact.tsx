@@ -1,13 +1,16 @@
-import Navbar from "../components/Navbar"
+import Navbar from "../navigation/Navbar"
 import { useNavigate } from 'react-router-dom';
 import { useRef } from "react"
 import { Person } from "../essentials/Types"
-import { addContact } from "../essentials/Requests"
+import { addContact, uploadFile } from "../essentials/Requests"
 import PeopleFormField from "../components/People/PeopleFormField";
 import PeopleForm from "../components/People/PeopleForm";
+import useDocumentTitle from "../hooks/Title";
 
 
 const AddContact = () => {
+    useDocumentTitle("Add Contact")
+
     const firstName = useRef("") as unknown as React.MutableRefObject<HTMLInputElement>
     const lastName = useRef("") as unknown as React.MutableRefObject<HTMLInputElement>
     const email = useRef("") as unknown as React.MutableRefObject<HTMLInputElement>
@@ -18,6 +21,7 @@ const AddContact = () => {
     const twitter = useRef("") as unknown as React.MutableRefObject<HTMLInputElement>
     const instagram = useRef("") as unknown as React.MutableRefObject<HTMLInputElement>
     const github = useRef("") as unknown as React.MutableRefObject<HTMLInputElement>
+    const url = useRef("")
 
     const history = useNavigate()
     /*
@@ -27,8 +31,17 @@ const AddContact = () => {
             }
         }
     */
+
+    const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // @ts-ignore
+        const file: any = e.target?.files[0]
+        if (file)
+            uploadFile(file, (e) => url.current = e)
+    }
+
     const submitForm = (e: React.FormEvent): void => {
         e.preventDefault()
+        
         const person: Person = {
             first_name: firstName.current.value,
             last_name: lastName.current.value,
@@ -39,7 +52,8 @@ const AddContact = () => {
             label: label.current.value != "" ? label.current.value : null,
             twitter: twitter.current.value != "" ? twitter.current.value : null,
             instagram: instagram.current.value != "" ? instagram.current.value : null,
-            github: github.current.value != "" ? github.current.value : null
+            github: github.current.value != "" ? github.current.value : null,
+            img: url.current
         }
         console.log(person)
         addContact(person, () => (window as any).success_dialog.showModal())
@@ -56,6 +70,17 @@ const AddContact = () => {
             <PeopleForm callback={(e) => submitForm(e)}>
                 <PeopleFormField label="First Name" type="text" placeholder="Enter first name" ref_form={firstName} />
                 <PeopleFormField label="Last Name" type="text" placeholder="Enter last name" ref_form={lastName} />
+                <div className="form-control w-full max-w-xs">
+                    <label className="label">
+                        <span className="label-text text-lg">Upload Photo</span>
+                    </label>
+                    <input
+                        type="file"
+                        className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+                        accept=".gif,.jpg,.jpeg,.png,.webp"
+                        onChange={(e) => handleUpload(e)}
+                    />
+                </div>
                 <PeopleFormField label="Email" type="email" placeholder="Enter email" ref_form={email} />
                 <PeopleFormField label="Phone" type="text" placeholder="Enter phone number" ref_form={phone} />
                 <PeopleFormField label="Country" type="text" placeholder="Enter country" ref_form={country} />

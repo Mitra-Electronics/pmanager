@@ -1,3 +1,5 @@
+import { ReactNode } from "react"
+
 export interface PersonProps{
     id: number, 
     name: string,
@@ -6,6 +8,16 @@ export interface PersonProps{
     birthday: string| null,
     github: string| null,
     img: string
+}
+
+export interface FileResponse {
+    success: boolean,
+    url: string
+}
+
+export interface ConditionalProps {
+    children: ReactNode,
+    condition: boolean
 }
 
 export interface Person {
@@ -18,7 +30,8 @@ export interface Person {
     label: string|null,
     twitter: string|null,
     instagram: string|null,
-    github: string|null
+    github: string|null,
+    img: string|null
 }
 
 export interface PersonInDb extends Person{

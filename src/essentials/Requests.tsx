@@ -1,5 +1,6 @@
 import axios from "axios";
-import { Person, GetPersonResult, GetAllPeopleResult, PersonInDb } from "../essentials/Types";
+import FormData from 'form-data';
+import { Person, GetPersonResult, GetAllPeopleResult, PersonInDb, FileResponse } from "../essentials/Types";
 
 export const getAllContacts = async (): Promise<PersonInDb[] | null | undefined> => {
     try {
@@ -43,6 +44,31 @@ export const addContact = async (obj: Person, callback: () => void) => {
     }
     catch (error) {
         console.error(error);
+    }
+}
+
+export const uploadFile = async (file: File, callback: (d: string) => void) => {
+    try {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await axios.post(
+            'http://127.0.0.1:8000/upload',
+            formData,
+            {
+                headers: {
+                    
+                    'accept': 'application/json',
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+        )
+        console.log(response)
+        const data: FileResponse = await response.data
+        callback(data.url)
+    }
+    catch (err) {
+        console.error(err)
     }
 }
 

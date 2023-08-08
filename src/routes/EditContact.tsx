@@ -1,4 +1,4 @@
-import Navbar from "../components/Navbar"
+import Navbar from "../navigation/Navbar"
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRef } from "react"
 import { Person } from "../essentials/Types"
@@ -48,7 +48,9 @@ const EditContact = () => {
             label: label.current.value != "" ? label.current.value : null,
             twitter: twitter.current.value != "" ? twitter.current.value : null,
             instagram: instagram.current.value != "" ? instagram.current.value : null,
-            github: github.current.value != "" ? github.current.value : null
+            github: github.current.value != "" ? github.current.value : null,
+            // @ts-ignore
+            img: data.img != null || data.img != undefined ? data.img : ""
         }
         console.log(person)
         editContact((peopleId as unknown as number), person, () => (window as any).success_dialog.showModal())

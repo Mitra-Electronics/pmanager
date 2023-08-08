@@ -1,13 +1,17 @@
 import '../App.css'
-import Navbar from '../components/Navbar'
-import { PersonProps } from '../essentials/Types'
+import Navbar from '../navigation/Navbar'
+import { PersonInDb } from '../essentials/Types'
 import useDocumentTitle from '../hooks/Title'
 import { useQuery } from "@tanstack/react-query"
 import { getAllContacts } from '../essentials/Requests'
 import Unpopulated from '../components/Unpopulated'
 import { Link } from 'react-router-dom'
+import { Github, Twitter, Instagram } from 'lucide-react'
+import SocialCards from '../components/SocialCards'
+import Conditional from '../components/Conditional'
 
-const PersonComponent = ({ id, name, country, email, birthday, github, img }: PersonProps) => {
+const PersonComponent = ({ id, first_name, last_name, country, email, birthday, github, twitter, instagram, img }: PersonInDb) => {
+
   return (
     <tr>
       <th>
@@ -19,24 +23,49 @@ const PersonComponent = ({ id, name, country, email, birthday, github, img }: Pe
         <Link className="flex items-center space-x-3" to={'/people/' + id}>
           <div className="avatar">
             <div className="mask mask-squircle w-12 h-12">
-              {img ? <img src={img} alt="Avatar Tailwind CSS Component" /> : <img src={img} alt="Avatar Tailwind CSS Component" />}
+              {/* TODO: Wrap it in Conditional */}
+              {img ? <img src={img} alt={first_name + " img"} /> : <img src={img ? img : "https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo"} alt="Avatar Tailwind CSS Component" />}
             </div>
           </div>
           <div>
-            <div className="font-bold">{name}</div>
-            {country != null ? <div className="text-sm opacity-50 max-md:role">{country}</div> : <></>}
+            <div className="font-bold">{first_name} {last_name}</div>
+            <Conditional condition={country != null}>
+            <div className="text-sm opacity-50 max-md:role">{country}</div>
+            </Conditional>
           </div>
         </Link>
       </td>
       <td className="max-sm:role">
-        {email == null && birthday == null ? <></> : <>
-          {email}
-          <br />
-          <span className="badge badge-ghost badge-sm max-md:role">{birthday}</span>
-        </>}
+        <Conditional condition={(email == null && birthday == null) == true}>
+          <>
+            {email}
+            <br />
+            <span className="badge badge-ghost badge-sm max-md:role">{birthday}</span>
+          </>
+        </Conditional>
       </td>
       <td className="max-sm:role">
-        {github != null ? <>{github}</> : <></>}
+        <table className="table-auto">
+          <thead>
+            <tr>
+              <Conditional condition={github != null}>
+                <SocialCards dataTip="Github" href={"https://github.com/" + github}>
+                  <Github className="contact-socials" />
+                </SocialCards>
+              </Conditional>
+              <Conditional condition={twitter != null}>
+                <SocialCards dataTip="Twitter" href={"https://twitter.com/" + twitter}>
+                  <Twitter className="contact-socials" />
+                </SocialCards>
+              </Conditional>
+              <Conditional condition={instagram != null}>
+                <SocialCards dataTip="Instagram" href={"https://instagram.com/" + instagram}>
+                  <Instagram className="contact-socials" />
+                </SocialCards>
+              </Conditional>
+            </tr>
+          </thead>
+        </table>
       </td>
       <th className="max-sm:role">
         <button className="btn btn-ghost btn-xs"><Link to={'/people/' + id}>details</Link></button>
@@ -75,12 +104,12 @@ function App() {
               </th>
               <th>Name</th>
               <th className="max-sm:role">Email</th>
-              <th className="max-sm:role">Github</th>
+              <th className="max-sm:role">Social Media</th>
               <th className="max-sm:role"></th>
             </tr>
           </thead>
           <tbody>
-            {data.map((e) => <PersonComponent name={e.first_name + " " + e.last_name} country={e.country} email={e.email} birthday={e.birthday} github={e.github} img='https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo' id={e.id} key={e.id} />)}
+            {data.map((e) => <PersonComponent key={e.id} {...e} />)}
           </tbody>
           {/* foot */}
           {/*<tfoot>
