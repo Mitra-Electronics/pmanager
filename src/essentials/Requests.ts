@@ -1,6 +1,6 @@
 import axios from "axios";
 import FormData from 'form-data';
-import { Person, GetPersonResult, GetAllPeopleResult, PersonInDb, FileResponse } from "../essentials/Types";
+import { Person, GetPersonResult, GetAllPeopleResult, PersonInDb, FileResponse } from "./Types";
 
 export const getAllContacts = async (): Promise<PersonInDb[] | null | undefined> => {
     try {
