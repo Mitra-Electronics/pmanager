@@ -6,6 +6,7 @@ import Unpopulated from "../components/Unpopulated";
 import { Github, Twitter, Instagram } from "lucide-react";
 import SocialCards from "../components/SocialCards";
 import Conditional from "../components/Conditional";
+import defaultProfileGen from "../essentials/DefaultProfileUrl";
 
 const Contact = () => {
     const { peopleId } = useParams()
@@ -31,7 +32,7 @@ const Contact = () => {
                 <figure className="p-10">
                     <img
                         className="rounded-full aspect-square w-72 h-72"
-                        src={data.img ? data.img : "https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo"}
+                        src={data.img ? data.img : defaultProfileGen(data.first_name, data.last_name)}
                         alt="Photo"
                     />
                 </figure>

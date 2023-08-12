@@ -1,8 +1,8 @@
 import { ModalProps } from "../essentials/Types"
 
-const Modal = ({handleSubmit, heading}:ModalProps) =>{
+const Modal = ({handleSubmit, heading, refModal}:ModalProps) =>{
     return(
-        <dialog id="success_dialog" className="modal">
+        <dialog className="modal" ref={refModal}>
                 <form method="dialog" className="modal-box" onSubmit={handleSubmit}>
                     <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     <h3 className="font-bold text-lg">{heading}</h3>

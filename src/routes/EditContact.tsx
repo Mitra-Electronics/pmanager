@@ -28,6 +28,7 @@ const EditContact = () => {
     const twitter = useRef("") as unknown as React.MutableRefObject<HTMLInputElement>
     const instagram = useRef("") as unknown as React.MutableRefObject<HTMLInputElement>
     const github = useRef("") as unknown as React.MutableRefObject<HTMLInputElement>
+    const modal = useRef("") as unknown as React.MutableRefObject<HTMLDialogElement>
 
     const history = useNavigate()
     /*
@@ -51,10 +52,10 @@ const EditContact = () => {
             instagram: instagram.current.value != "" ? instagram.current.value : null,
             github: github.current.value != "" ? github.current.value : null,
             // @ts-ignore
-            img: data.img != null || data.img != undefined ? data.img : ""
+            img: data.img != null || data.img != undefined ? data.img : null
         }
         console.log(person)
-        editContact((peopleId as unknown as number), person, () => (window as any).success_dialog.showModal())
+        editContact((peopleId as unknown as number), person, () => modal.current.showModal())
     }
 
     const modalHandler = (e: React.FormEvent) => {
@@ -86,7 +87,7 @@ const EditContact = () => {
                 <PeopleFormField label="Instagram" type="text" placeholder="Enter instagram" ref_form={instagram} value={data.instagram} />
                 <PeopleFormField label="Github" type="text" placeholder="Enter github" ref_form={github} value={data.github} />
             </PeopleForm>
-            <Modal handleSubmit={(e) => modalHandler(e)} heading="Contact Edited!"/>
+            <Modal handleSubmit={(e) => modalHandler(e)} heading="Contact Edited!" refModal={modal}/>
         </>
     )
 }

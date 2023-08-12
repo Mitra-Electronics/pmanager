@@ -23,7 +23,8 @@ export interface ConditionalProps {
 
 export interface ModalProps {
     handleSubmit: (e: React.FormEvent) => void,
-    heading: string
+    heading: string,
+    refModal: React.MutableRefObject<HTMLDialogElement>
 }
 
 export interface Person {

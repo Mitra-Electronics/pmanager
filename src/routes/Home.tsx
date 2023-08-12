@@ -6,9 +6,11 @@ import { useQuery } from "@tanstack/react-query"
 import { getAllContacts } from '../essentials/Requests'
 import Unpopulated from '../components/Unpopulated'
 import { Link } from 'react-router-dom'
-import { Github, Twitter, Instagram } from 'lucide-react'
+import { Github, Twitter, Instagram, Trash2, WrapText } from 'lucide-react'
 import SocialCards from '../components/SocialCards'
 import Conditional from '../components/Conditional'
+import Cards from '../components/Cards'
+import defaultProfileGen from '../essentials/DefaultProfileUrl'
 
 const PersonComponent = ({ id, first_name, last_name, country, email, birthday, github, twitter, instagram, img }: PersonInDb) => {
 
@@ -23,8 +25,9 @@ const PersonComponent = ({ id, first_name, last_name, country, email, birthday, 
         <Link className="flex items-center space-x-3" to={'/people/' + id}>
           <div className="avatar">
             <div className="mask mask-squircle w-12 h-12">
-              <Conditional condition={img != null} error={<img src={img ? img : "https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo"} alt="Avatar Tailwind CSS Component" />}>
-                <img src={img ? img : ""} alt={first_name + " img"} />
+              <Conditional condition={img != null} error={<img src={img ? img : defaultProfileGen(first_name, last_name)} alt="Avatar Tailwind CSS Component" />}>
+                {/* @ts-ignore */}
+                <img src={img} alt={first_name + " img"} />
               </Conditional>
             </div>
           </div>
@@ -69,7 +72,8 @@ const PersonComponent = ({ id, first_name, last_name, country, email, birthday, 
         </table>
       </td>
       <th className="max-sm:role">
-        <button className="btn btn-ghost btn-xs"><Link to={'/people/' + id}>details</Link></button>
+        <Cards dataTip='Details' href={'/people/' + id}><WrapText className="contact-socials" /></Cards>
+        <Cards dataTip='Delete' href={'/people/' + id}><Trash2 className="contact-socials" /></Cards>
       </th>
     </tr >
   )

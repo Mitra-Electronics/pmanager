@@ -22,6 +22,7 @@ const AddContact = () => {
     const twitter = useRef("") as unknown as React.MutableRefObject<HTMLInputElement>
     const instagram = useRef("") as unknown as React.MutableRefObject<HTMLInputElement>
     const github = useRef("") as unknown as React.MutableRefObject<HTMLInputElement>
+    const modal = useRef("") as unknown as React.MutableRefObject<HTMLDialogElement>
     const url = useRef("")
 
     const history = useNavigate()
@@ -54,10 +55,10 @@ const AddContact = () => {
             twitter: twitter.current.value != "" ? twitter.current.value : null,
             instagram: instagram.current.value != "" ? instagram.current.value : null,
             github: github.current.value != "" ? github.current.value : null,
-            img: url.current
+            img: url.current != "" ? url.current : null
         }
         console.log(person)
-        addContact(person, () => (window as any).success_dialog.showModal())
+        addContact(person, () => modal.current.showModal())
     }
 
     const modalHandler = (e: React.FormEvent) => {
@@ -91,7 +92,7 @@ const AddContact = () => {
                 <PeopleFormField label="Instagram" type="text" placeholder="Enter instagram" ref_form={instagram} />
                 <PeopleFormField label="Github" type="text" placeholder="Enter github" ref_form={github} />
             </PeopleForm>
-            <Modal handleSubmit={(e) => modalHandler(e)} heading="Contact Created!"/>
+            <Modal handleSubmit={(e) => modalHandler(e)} heading="Contact Created!" refModal={modal}/>
         </>
     )
 }
