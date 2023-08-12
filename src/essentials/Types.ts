@@ -17,7 +17,13 @@ export interface FileResponse {
 
 export interface ConditionalProps {
     children: ReactNode,
-    condition: boolean
+    condition: boolean,
+    error?: ReactNode
+}
+
+export interface ModalProps {
+    handleSubmit: (e: React.FormEvent) => void,
+    heading: string
 }
 
 export interface Person {

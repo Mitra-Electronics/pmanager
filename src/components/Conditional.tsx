@@ -1,12 +1,15 @@
 import { ConditionalProps } from "../essentials/Types"
 
 
-const Conditional = ({ children, condition }: ConditionalProps) => {
+const Conditional = ({ children, condition, error }: ConditionalProps) => {
   if (condition) {
     return children
   }
   else {
-    return <></>
+    if (error)
+      return error
+    else
+      return <></>
   }
 }
 

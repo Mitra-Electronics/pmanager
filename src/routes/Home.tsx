@@ -23,14 +23,15 @@ const PersonComponent = ({ id, first_name, last_name, country, email, birthday, 
         <Link className="flex items-center space-x-3" to={'/people/' + id}>
           <div className="avatar">
             <div className="mask mask-squircle w-12 h-12">
-              {/* TODO: Wrap it in Conditional */}
-              {img ? <img src={img} alt={first_name + " img"} /> : <img src={img ? img : "https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo"} alt="Avatar Tailwind CSS Component" />}
+              <Conditional condition={img != null} error={<img src={img ? img : "https://lh3.googleusercontent.com/ogw/AGvuzYYndjzvnqcnojHTE1WBhsy9TaZbuMxZR9hpRv5ZZQ=s320-c-mo"} alt="Avatar Tailwind CSS Component" />}>
+                <img src={img ? img : ""} alt={first_name + " img"} />
+              </Conditional>
             </div>
           </div>
           <div>
             <div className="font-bold">{first_name} {last_name}</div>
             <Conditional condition={country != null}>
-            <div className="text-sm opacity-50 max-md:role">{country}</div>
+              <div className="text-sm opacity-50 max-md:role">{country}</div>
             </Conditional>
           </div>
         </Link>

@@ -6,6 +6,7 @@ import { addContact, uploadFile } from "../essentials/Requests"
 import PeopleFormField from "../components/People/PeopleFormField";
 import PeopleForm from "../components/People/PeopleForm";
 import useDocumentTitle from "../hooks/Title";
+import Modal from "../components/Modal";
 
 
 const AddContact = () => {
@@ -90,13 +91,7 @@ const AddContact = () => {
                 <PeopleFormField label="Instagram" type="text" placeholder="Enter instagram" ref_form={instagram} />
                 <PeopleFormField label="Github" type="text" placeholder="Enter github" ref_form={github} />
             </PeopleForm>
-            <dialog id="success_dialog" className="modal">
-                <form method="dialog" className="modal-box" onSubmit={(e) => modalHandler(e)}>
-                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-                    <h3 className="font-bold text-lg">Contact Created!</h3>
-                    <p className="py-4">Click on ✕ button to continue</p>
-                </form>
-            </dialog>
+            <Modal handleSubmit={(e) => modalHandler(e)} heading="Contact Created!"/>
         </>
     )
 }
