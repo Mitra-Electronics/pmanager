@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 import { Link } from "react-router-dom"
-import Conditional from "./Conditional"
+import Conditional from "../blocks/Conditional"
 
 interface CardsProps {
     href?: string,

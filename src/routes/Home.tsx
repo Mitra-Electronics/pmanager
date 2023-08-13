@@ -2,17 +2,23 @@ import '../App.css'
 import Navbar from '../navigation/Navbar'
 import { PersonInDb } from '../essentials/Types'
 import useDocumentTitle from '../hooks/Title'
-import { useQuery } from "@tanstack/react-query"
-import { getAllContacts } from '../essentials/Requests'
-import Unpopulated from '../components/Unpopulated'
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { deleteContact, getAllContacts } from '../essentials/Requests'
+import Unpopulated from '../components/blocks/Unpopulated'
 import { Link } from 'react-router-dom'
 import { Github, Twitter, Instagram, Trash2, WrapText } from 'lucide-react'
-import SocialCards from '../components/SocialCards'
-import Conditional from '../components/Conditional'
-import Cards from '../components/Cards'
+import SocialCards from '../components/cards/SocialCards'
+import Conditional from '../components/blocks/Conditional'
+import Cards from '../components/cards/Cards'
 import defaultProfileGen from '../essentials/DefaultProfileUrl'
+import Modal from '../components/blocks/Modal'
+import { useRef } from 'react'
 
-const PersonComponent = ({ id, first_name, last_name, country, email, birthday, github, twitter, instagram, img }: PersonInDb) => {
+interface ComponentProps extends PersonInDb{
+  modalRefProp: React.MutableRefObject<HTMLDialogElement>
+}
+
+const PersonComponent = ({ id, first_name, last_name, country, email, birthday, github, twitter, instagram, img, modalRefProp }: ComponentProps) => {
 
   return (
     <tr>
@@ -40,7 +46,7 @@ const PersonComponent = ({ id, first_name, last_name, country, email, birthday, 
         </Link>
       </td>
       <td className="max-sm:role">
-        <Conditional condition={(email == null && birthday == null) == true}>
+        <Conditional condition={(email == null && birthday == null) == false}>
           <>
             {email}
             <br />
@@ -73,7 +79,7 @@ const PersonComponent = ({ id, first_name, last_name, country, email, birthday, 
       </td>
       <th className="max-sm:role">
         <Cards dataTip='Details' href={'/people/' + id}><WrapText className="contact-socials" /></Cards>
-        <Cards dataTip='Delete' href={'/people/' + id}><Trash2 className="contact-socials" /></Cards>
+        <Cards dataTip='Delete'><Trash2 className="contact-socials" onClick={() => deleteContact(id, () => modalRefProp.current.showModal())}/></Cards>
       </th>
     </tr >
   )
@@ -85,6 +91,15 @@ function App() {
     queryKey: ["all"],
     queryFn: () => getAllContacts(),
   })
+  const queryClient = useQueryClient()
+
+  const modal = useRef("") as unknown as React.MutableRefObject<HTMLDialogElement>
+
+  const modalHandler = (e: React.FormEvent) => {
+    e.preventDefault()
+    modal.current.close()
+    queryClient.invalidateQueries({ queryKey: ['all'] })
+  }
 
   if (status === "loading")
     return <Unpopulated text="Loading" />
@@ -114,7 +129,7 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {data.map((e) => <PersonComponent key={e.id} {...e} />)}
+            {data.map((e) => <PersonComponent key={e.id} modalRefProp={modal} {...e} />)}
           </tbody>
           {/* foot */}
           {/*<tfoot>
@@ -129,6 +144,7 @@ function App() {
 
         </table>
       </div>
+      <Modal handleSubmit={(e) => modalHandler(e)} heading="Contact Deleted!" refModal={modal}/>
     </>
   )
 }

@@ -6,8 +6,8 @@ import { editContact, getContact } from "../essentials/Requests"
 import PeopleFormField from "../components/People/PeopleFormField";
 import PeopleForm from "../components/People/PeopleForm";
 import { useQuery } from "@tanstack/react-query";
-import Unpopulated from "../components/Unpopulated";
-import Modal from "../components/Modal";
+import Unpopulated from "../components/blocks/Unpopulated";
+import Modal from "../components/blocks/Modal";
 
 
 const EditContact = () => {
@@ -52,10 +52,10 @@ const EditContact = () => {
             instagram: instagram.current.value != "" ? instagram.current.value : null,
             github: github.current.value != "" ? github.current.value : null,
             // @ts-ignore
-            img: data.img != null || data.img != undefined ? data.img : null
+            img: (data.img != null || data.img != undefined) ? data.img : null
         }
         console.log(person)
-        editContact((peopleId as unknown as number), person, () => modal.current.showModal())
+        editContact(Number(peopleId), person, () => modal.current.showModal())
     }
 
     const modalHandler = (e: React.FormEvent) => {

@@ -1,5 +1,5 @@
-import Navbar from "../navigation/Navbar"
-import { UnpopProps } from "../essentials/Types"
+import Navbar from "../../navigation/Navbar"
+import { UnpopProps } from "../../essentials/Types"
 
 const Unpopulated = ({ text }: UnpopProps) => {
     return (

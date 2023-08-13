@@ -57,7 +57,7 @@ export const uploadFile = async (file: File, callback: (d: string) => void) => {
             formData,
             {
                 headers: {
-                    
+
                     'accept': 'application/json',
                     'Content-Type': 'multipart/form-data'
                 }
@@ -90,5 +90,19 @@ export const editContact = async (id: number, obj: Person, callback: () => void)
     }
     catch (error) {
         console.error(error);
+    }
+}
+
+export const deleteContact = async (id: number, callback: () => void) => {
+    try {
+        console.log(id)
+        const response = await axios.post(
+            'http://127.0.0.1:8000/delete?id='+id.toString()
+        )
+        console.log(response)
+        callback()
+    }
+    catch(error){
+        console.error(error)
     }
 }

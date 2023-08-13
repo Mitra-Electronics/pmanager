@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './routes/Home.tsx'
 import Contact from './routes/Contact.tsx'
-import ErrorPage from './components/Error.tsx'
+import ErrorPage from './components/blocks/Error.tsx'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import './index.css'
 import {

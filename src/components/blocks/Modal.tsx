@@ -1,4 +1,4 @@
-import { ModalProps } from "../essentials/Types"
+import { ModalProps } from "../../essentials/Types"
 
 const Modal = ({handleSubmit, heading, refModal}:ModalProps) =>{
     return(

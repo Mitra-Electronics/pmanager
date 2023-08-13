@@ -6,7 +6,7 @@ import { addContact, uploadFile } from "../essentials/Requests"
 import PeopleFormField from "../components/People/PeopleFormField";
 import PeopleForm from "../components/People/PeopleForm";
 import useDocumentTitle from "../hooks/Title";
-import Modal from "../components/Modal";
+import Modal from "../components/blocks/Modal";
 
 
 const AddContact = () => {

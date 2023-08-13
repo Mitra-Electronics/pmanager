@@ -2,10 +2,10 @@ import Navbar from "../navigation/Navbar"
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query"
 import { getContact } from "../essentials/Requests";
-import Unpopulated from "../components/Unpopulated";
+import Unpopulated from "../components/blocks/Unpopulated";
 import { Github, Twitter, Instagram } from "lucide-react";
-import SocialCards from "../components/SocialCards";
-import Conditional from "../components/Conditional";
+import SocialCards from "../components/cards/SocialCards";
+import Conditional from "../components/blocks/Conditional";
 import defaultProfileGen from "../essentials/DefaultProfileUrl";
 
 const Contact = () => {
